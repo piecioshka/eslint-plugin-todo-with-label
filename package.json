@@ -1,0 +1,39 @@
+{
+  "name": "eslint-plugin-todo-with-label",
+  "description": "ESLint plugin supports TODO comments with a label in parenthesis",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "Piotr Kowalski",
+    "email": "piecioshka@gmail.com",
+    "url": "https://piecioshka.pl/"
+  },
+  "scripts": {
+    "test": "cd tests/integration/ && DEBUG=eslint:plugins:* npm run lint",
+    "postinstall": "cd tests/integration/ && npm install"
+  },
+  "devDependencies": {
+    "debug": "^4.3.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:piecioshka/eslint-plugin-todo-with-label.git"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "files": [
+    "src",
+    "package.json",
+    "README.md"
+  ],
+  "keywords": [
+    "eslint",
+    "eslintplugin",
+    "eslint-plugin",
+    "todo",
+    "label",
+    "author"
+  ],
+  "main": "src/index.js"
+}

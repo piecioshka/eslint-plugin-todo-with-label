@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "eslint-plugin-todo-with-label-integration",
+  "scripts": {
+    "lint": "eslint example.js"
+  },
+  "devDependencies": {
+    "eslint": "latest",
+    "eslint-plugin-todo-with-label": "file:../.."
+  }
+}

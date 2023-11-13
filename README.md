@@ -1,0 +1,99 @@
+# eslint-plugin-todo-with-label
+
+[![npm version](https://badge.fury.io/js/eslint-plugin-todo-with-label.svg)](https://badge.fury.io/js/eslint-plugin-todo-with-label)
+[![downloads count](https://img.shields.io/npm/dt/eslint-plugin-todo-with-label.svg)](https://www.npmjs.com/package/eslint-plugin-todo-with-label)
+[![github-ci](https://github.com/piecioshka/eslint-plugin-todo-with-label/workflows/Testing/badge.svg?branch=master)](https://github.com/piecioshka/eslint-plugin-todo-with-label/actions/)
+
+🔨 ESLint plugin supports TODO comments with a label in parenthesis
+
+> Give a ⭐️ if this project helped you!
+
+## Motivation
+
+![](assets/screenshot.png)
+
+When working with code, many times there will be a situation of creating a TODO
+in the code to indicate that you need to perform some action here, such as writing an error handler.
+In such situations, the creation of a TODO is understandable. On the other hand,
+it often happens that such a comment in the code is for a long time.
+Then people reading such code, who would like to solve the TODO comment,
+lack information about the author, so that they can turn to him for more details.
+
+If we use this plugin, we will force everyone creating a TODO comment to define the author in parentheses.
+This way, we will always have a point of contact for the person we can ask for help.
+
+## Features
+
+- ✅ Validate format of TODOs in comments _(default valid format is `TODO(label): any text here`)_
+- ✅ Support passing a custom pattern
+
+## Installation
+
+You'll first need to install [ESLint](https://eslint.org/):
+
+```bash
+npm install -D eslint
+```
+
+Next, install `eslint-plugin-todo-with-label`:
+
+```bash
+npm install -D eslint-plugin-todo-with-label
+```
+
+## Usage
+
+Add `todo-with-label` to the plugins section of your `.eslintrc` configuration file.<br/>
+You can omit the `eslint-plugin-` prefix:
+
+```javascript
+module.exports = {
+  // ...
+  plugins: ['todo-with-label'],
+  rules: {
+    'todo-with-label/has-valid-pattern': 'error',
+  }
+};
+```
+
+## Options
+
+The optional configuration for rule `todo-with-label/has-valid-pattern`:
+
+- `pattern` examples:
+  - `^TODO: (.*)$`
+    - **valid**: `TODO: any text here`
+  - `^TODO\\((\\w+)\\)$`
+    - **valid**: `TODO(label)`
+  - `^TODO\\((author:@\\w+)\\)\\: (.*)$`
+    - **valid**: `TODO(author:@login): any text here`
+
+  Default `pattern` looks as follows:
+    - `^TODO\\((\\w+)\\)\\: (.*)$`
+      - **valid**: `TODO(label): any text here`
+
+Example:
+
+```js
+module.exports = {
+  // ...
+  plugins: ['todo-with-label'],
+  rules: {
+    "todo-with-label/has-valid-pattern": [
+      "error",
+      { pattern: "^TODO\\((author:@\\w+)\\)\\: (.*)$" },
+    ],
+  },
+};
+```
+
+⚠️ **WARNING**: When you pass a pattern, it should be a string and has _escaped_ backslashes.
+
+## Related
+
+* [eslint-config-piecioshka](https://github.com/piecioshka/eslint-config-piecioshka)
+* [export-eslint-config](https://github.com/piecioshka/export-eslint-config)
+
+## License
+
+[The MIT License](https://piecioshka.mit-license.org) @ 2023
