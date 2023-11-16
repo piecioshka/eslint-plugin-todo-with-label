@@ -4,8 +4,19 @@ const console = {
   log: debug("eslint:plugins:todo-with-label:log"),
 };
 
-const STARTS_WITH_TODO_PATTERN = /^TODO(.*)$/;
-const TODO_WITH_LABEL_PATTERN = /^TODO\((\w+)\)\: (.*)$/;
+const types = [
+  "TODO",
+  "NOTE",
+  "COMMENT",
+  "FIXME",
+  "BUG",
+  "HACK",
+  "INFO",
+  "XXX",
+].join("|");
+
+const STARTS_WITH_TYPE_PATTERN = new RegExp(`^(${types})(.*)$`);
+const TYPE_WITH_LABEL_PATTERN = new RegExp(`^(${types})\\((\\w+)\\)\\: (.*)$`);
 
 module.exports = {
   meta: {
@@ -13,13 +24,20 @@ module.exports = {
     docs: {
       description: "Support TODO comments with a label in parenthesis",
       recommended: true,
-      url: "https://github.com/piecioshka/eslint-plugin-todo-with-label/blob/main/docs/rules/todo-with-label.md",
     },
-    fixable: null,
     messages: {
-      "invalid-pattern":
-        "'{{ text }}' has not match the pattern {{ pattern }}",
+      "without-label": "'{{ text }}' should has a label",
+      "invalid-pattern": "'{{ text }}' has not match the pattern {{ pattern }}",
     },
+    schema: [
+      {
+        type: "object",
+        properties: {
+          pattern: { type: "string" },
+        },
+        additionalProperties: false,
+      },
+    ],
   },
   create(context) {
     const { options } = context;
@@ -27,14 +45,14 @@ module.exports = {
     const comments = sourceCode.getAllComments();
     const passedPattern = options[0]?.pattern?.trim();
 
-    const validPattern = passedPattern
-      ? new RegExp(passedPattern)
-      : TODO_WITH_LABEL_PATTERN;
+    const [messageId, validPattern] = passedPattern
+      ? ["invalid-pattern", new RegExp(passedPattern)]
+      : ["without-label", TYPE_WITH_LABEL_PATTERN];
 
     comments.forEach((comment) => {
       const text = comment.value.trim();
 
-      if (!STARTS_WITH_TODO_PATTERN.test(text)) {
+      if (!STARTS_WITH_TYPE_PATTERN.test(text)) {
         return;
       }
 
@@ -42,7 +60,7 @@ module.exports = {
         console.log("❌", text);
         context.report({
           loc: comment.loc,
-          messageId: "invalid-pattern",
+          messageId,
           data: { text, pattern: validPattern },
         });
       } else {

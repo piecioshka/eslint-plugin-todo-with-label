@@ -26,6 +26,7 @@ This way, we will always have a point of contact for the person we can ask for h
 
 - ✅ Validate format of TODOs in comments _(default valid format is `TODO(label): any text here`)_
 - ✅ Support passing a custom pattern
+- ✅ Support 8 comment types: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
 
 ## Installation
 
