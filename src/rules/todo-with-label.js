@@ -27,8 +27,7 @@ module.exports = {
     },
     messages: {
       "without-label": "'{{ text }}' should have a label",
-      "invalid-pattern":
-        "'{{ text }}' has not matched the pattern {{ pattern }}",
+      "invalid-pattern": "'{{ text }}' doesn't match the pattern {{ pattern }}",
     },
     schema: [
       {
