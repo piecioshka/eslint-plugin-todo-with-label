@@ -4,7 +4,7 @@
 [![downloads count](https://img.shields.io/npm/dt/eslint-plugin-todo-with-label.svg)](https://www.npmjs.com/package/eslint-plugin-todo-with-label)
 [![github-ci](https://github.com/piecioshka/eslint-plugin-todo-with-label/actions/workflows/testing.yml/badge.svg)](https://github.com/piecioshka/eslint-plugin-todo-with-label/actions/workflows/testing.yml)
 
-🔨 ESLint plugin supports TODO comments with a label in parenthesis
+🔨 ESLint plugin supports TODO comments with a label in parentheses
 
 > Give a ⭐️ if this project helped you!
 
@@ -25,8 +25,8 @@ This way, we will always have a point of contact for the person we can ask for h
 ## Features
 
 - ✅ Validate format of TODOs in comments _(default valid format is `TODO(label): any text here`)_
-- ✅ Support passing a custom pattern
-- ✅ Support 8 comment types: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
+- ✅ Supports passing a custom pattern
+- ✅ Supports 8 comment types: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
 
 ## Installation
 

@@ -22,12 +22,12 @@ module.exports = {
   meta: {
     type: "suggestion",
     docs: {
-      description: "Support TODO comments with a label in parenthesis",
+      description: "Supports TODO comments with a label in parentheses",
       recommended: true,
     },
     messages: {
-      "without-label": "'{{ text }}' should has a label",
-      "invalid-pattern": "'{{ text }}' has not match the pattern {{ pattern }}",
+      "without-label": "'{{ text }}' should have a label",
+      "invalid-pattern": "'{{ text }}' doesn't match the pattern {{ pattern }}",
     },
     schema: [
       {
