@@ -22,7 +22,7 @@ module.exports = {
   meta: {
     type: "suggestion",
     docs: {
-      description: "Support TODO comments with a label in parentheses",
+      description: "Supports TODO comments with a label in parentheses",
       recommended: true,
     },
     messages: {
