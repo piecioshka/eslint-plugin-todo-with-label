@@ -25,7 +25,7 @@ This way, we will always have a point of contact for the person we can ask for h
 ## Features
 
 - ✅ Validate format of TODOs in comments _(default valid format is `TODO(label): any text here`)_
-- ✅ Supports passing a custom pattern
+- ✅ Supports passing a custom pattern and types
 - ✅ Supports 8 comment types: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
 
 ## Installation
@@ -61,6 +61,12 @@ module.exports = {
 
 The optional configuration for rule `todo-with-label/has-valid-pattern`:
 
+- `types` examples:
+  - `["TODO"]`
+  - `["FOO", "BAR", "BAZ"]`
+
+  Default `["TODO", "NOTE", "COMMENT", "FIXME", "BUG", "HACK", "INFO", "XXX"]`
+
 - `pattern` examples:
   - `^TODO: (.*)$`
     - **valid**: `TODO: any text here`
@@ -69,11 +75,12 @@ The optional configuration for rule `todo-with-label/has-valid-pattern`:
   - `^TODO\\((author:@\\w+)\\)\\: (.*)$`
     - **valid**: `TODO(author:@login): any text here`
 
-  Default `pattern` looks as follows:
-    - `^TODO\\((\\w+)\\)\\: (.*)$`
-      - **valid**: `TODO(label): any text here`
+  Default `pattern` looks as follows: `^TODO\\((\\w+)\\)\\: (.*)$`
+    - **valid**: `TODO(label): any text here`
 
-Example:
+  ⚠️ **WARNING**: When you pass a pattern, it should be a string and has _escaped_ backslashes.
+
+Example usage with options:
 
 ```js
 module.exports = {
@@ -82,13 +89,14 @@ module.exports = {
   rules: {
     "todo-with-label/has-valid-pattern": [
       "error",
-      { pattern: "^TODO\\((author:@\\w+)\\)\\: (.*)$" },
+      {
+        types: ["TODO"],
+        pattern: "^TODO\\((author:@\\w+)\\)\\: (.*)$"
+      },
     ],
   },
 };
 ```
-
-⚠️ **WARNING**: When you pass a pattern, it should be a string and has _escaped_ backslashes.
 
 ## Related
 

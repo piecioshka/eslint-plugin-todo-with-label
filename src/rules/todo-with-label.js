@@ -13,10 +13,7 @@ const types = [
   "HACK",
   "INFO",
   "XXX",
-].join("|");
-
-const STARTS_WITH_TYPE_PATTERN = new RegExp(`^(${types})(.*)$`);
-const TYPE_WITH_LABEL_PATTERN = new RegExp(`^(${types})\\((\\w+)\\)\\: (.*)$`);
+];
 
 module.exports = {
   meta: {
@@ -33,6 +30,7 @@ module.exports = {
       {
         type: "object",
         properties: {
+          types: { type: "array", items: { type: "string" } },
           pattern: { type: "string" },
         },
         additionalProperties: false,
@@ -43,11 +41,16 @@ module.exports = {
     const { options } = context;
     const sourceCode = context.getSourceCode();
     const comments = sourceCode.getAllComments();
+    const passedTypes = options[0]?.types;
     const passedPattern = options[0]?.pattern?.trim();
+
+    const usedTypes = (passedTypes || types).join("|");
+    const STARTS_WITH_TYPE_PATTERN = new RegExp(`^(${usedTypes})(.*)$`);
+    const defaultPattern = `^(${usedTypes})\\((\\w+)\\)\\: (.*)$`;
 
     const [messageId, validPattern] = passedPattern
       ? ["invalid-pattern", new RegExp(passedPattern)]
-      : ["without-label", TYPE_WITH_LABEL_PATTERN];
+      : ["without-label", new RegExp(defaultPattern)];
 
     comments.forEach((comment) => {
       const text = comment.value.trim();

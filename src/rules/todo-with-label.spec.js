@@ -37,19 +37,24 @@ test("case: without-label", () => {
 test("case: invalid-pattern", () => {
   const ruleTester = new RuleTester(globalOptions);
   const ruleOptions = [
-    { pattern: "^(XXX|FIXME)\\((author:@\\w+)\\)\\: (.*)$" },
+    {
+      types: ["FOO", "BAR"],
+      pattern: "^(FOO|BAR)\\((author:@\\w+)\\)\\: (.*)$"
+    },
   ];
   const valid = validFactory(ruleOptions);
   const invalid = invalidFactory(ruleOptions);
 
   ruleTester.run("todo-with-label", todoWithLabelRule, {
     valid: [
-      valid("// XXX(author:@piecioshka): invalid-pattern #1"),
-      valid("/* FIXME(author:@piecioshka): invalid-pattern #2 */"),
+      valid("// FOO(author:@piecioshka): invalid-pattern #1"),
+      valid("/* BAR(author:@piecioshka): invalid-pattern #2 */"),
+      valid("/* BAZ: invalid-pattern #3 */"),
+      valid("/* NOTE: invalid-pattern #4 */"),
     ],
     invalid: [
-      invalid("// XXX(@piecioshka): invalid-pattern #3"),
-      invalid("/* FIXME(@piecioshka): invalid-pattern #4 */"),
+      invalid("// FOO(@piecioshka): invalid-pattern #5"),
+      invalid("/* BAR(@piecioshka): invalid-pattern #6 */"),
     ],
   });
 });
