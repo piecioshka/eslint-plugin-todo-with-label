@@ -1,7 +1,9 @@
 # eslint-plugin-todo-with-label
 
+[![node version](https://img.shields.io/node/v/eslint-plugin-todo-with-label.svg)](https://www.npmjs.com/package/eslint-plugin-todo-with-label)
 [![npm version](https://badge.fury.io/js/eslint-plugin-todo-with-label.svg)](https://badge.fury.io/js/eslint-plugin-todo-with-label)
 [![downloads count](https://img.shields.io/npm/dt/eslint-plugin-todo-with-label.svg)](https://www.npmjs.com/package/eslint-plugin-todo-with-label)
+[![license](https://img.shields.io/npm/l/eslint-plugin-todo-with-label.svg)](https://www.npmjs.com/package/eslint-plugin-todo-with-label)
 [![github-ci](https://github.com/piecioshka/eslint-plugin-todo-with-label/actions/workflows/testing.yml/badge.svg)](https://github.com/piecioshka/eslint-plugin-todo-with-label/actions/workflows/testing.yml)
 
 🔨 ESLint plugin supports TODO comments with a label in parentheses
