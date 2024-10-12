@@ -36,8 +36,8 @@
   ],
   "keywords": [
     "eslint",
-    "eslintplugin",
     "eslint-plugin",
+    "plugin",
     "todo",
     "label",
     "author"
