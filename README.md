@@ -3,6 +3,7 @@
 [![node version](https://img.shields.io/node/v/eslint-plugin-todo-with-label.svg)](https://www.npmjs.com/package/eslint-plugin-todo-with-label)
 [![npm version](https://badge.fury.io/js/eslint-plugin-todo-with-label.svg)](https://badge.fury.io/js/eslint-plugin-todo-with-label)
 [![downloads count](https://img.shields.io/npm/dt/eslint-plugin-todo-with-label.svg)](https://www.npmjs.com/package/eslint-plugin-todo-with-label)
+[![size](https://packagephobia.com/badge?p=eslint-plugin-todo-with-label)](https://packagephobia.com/result?p=eslint-plugin-todo-with-label)
 [![license](https://img.shields.io/npm/l/eslint-plugin-todo-with-label.svg)](https://piecioshka.mit-license.org)
 [![github-ci](https://github.com/piecioshka/eslint-plugin-todo-with-label/actions/workflows/testing.yml/badge.svg)](https://github.com/piecioshka/eslint-plugin-todo-with-label/actions/workflows/testing.yml)
 
