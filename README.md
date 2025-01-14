@@ -31,21 +31,13 @@ This way, we will always have a point of contact for the person we can ask for h
 - ✅ Supports passing a custom pattern and types
 - ✅ Supports 8 comment types: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
 
-## Installation
-
-You'll first need to install [ESLint](https://eslint.org/):
-
-```bash
-npm install -D eslint
-```
-
-Next, install `eslint-plugin-todo-with-label`:
-
-```bash
-npm install -D eslint-plugin-todo-with-label
-```
-
 ## Usage
+
+Installation:
+
+```bash
+npm install -D eslint eslint-plugin-todo-with-label
+```
 
 Add `todo-with-label` to the plugins section of your `.eslintrc` configuration file.<br/>
 You can omit the `eslint-plugin-` prefix:
