@@ -14,7 +14,8 @@
     "coverage": "vitest --coverage --run"
   },
   "dependencies": {
-    "debug": "^4.3.4"
+    "debug": "^4.3.4",
+    "simple-git": "^3.27.0"
   },
   "devDependencies": {
     "@vitest/coverage-v8": "^0.34.6",
