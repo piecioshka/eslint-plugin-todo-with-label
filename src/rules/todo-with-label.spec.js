@@ -2,7 +2,17 @@ import { test } from "vitest";
 import { RuleTester } from "eslint";
 
 const todoWithLabelRule = require("./todo-with-label");
+
+/**
+ * @param {any} options
+ * @returns {(code: string) => RuleTester.ValidTestCase}
+ */
 const validFactory = (options) => (code) => ({ code, options });
+
+/**
+ * @param {any} options
+ * @returns {(code: string) => RuleTester.InvalidTestCase}
+ */
 const invalidFactory = (options) => (code) => ({
   code,
   options,
@@ -41,7 +51,7 @@ test("case: invalid-pattern", () => {
   const ruleOptions = [
     {
       types: ["FOO", "BAR"],
-      pattern: "^(FOO|BAR)\\((author:@\\w+)\\)\\: (.*)$"
+      pattern: "^(FOO|BAR)\\((author:@\\w+)\\)\\: (.*)$",
     },
   ];
   const valid = validFactory(ruleOptions);
