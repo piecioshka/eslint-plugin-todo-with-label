@@ -19,7 +19,7 @@ const types = [
 function clearText(text) {
   const textWithoutPrefix = /^[\s:-]*(.*)$/;
   const matched = text.match(textWithoutPrefix);
-  return matched[1];
+  return matched ? matched[1] : text;
 }
 
 function extractAuthorEmail(blameOutput) {
@@ -28,15 +28,20 @@ function extractAuthorEmail(blameOutput) {
 }
 
 function extractNameFromEmail(email) {
-  return email.split("@")[0];
+  const nameMatch = email.split("@");
+  return nameMatch ? nameMatch[0] : email;
 }
 
 function getGitEmail(line, filePath) {
-  const blameOutput = execSync(
-    `git blame -L ${line},${line} --porcelain ${filePath}`,
-    { encoding: "utf-8" }
-  );
-  return extractAuthorEmail(blameOutput);
+  try {
+    const blameOutput = execSync(
+      `git blame -L ${line},${line} --porcelain ${filePath}`,
+      { encoding: "utf-8" }
+    );
+    return extractAuthorEmail(blameOutput);
+  } catch (error) {
+    return "unknown@unknown.com";
+  }
 }
 
 /** @type {import('eslint').Rule.RuleModule} */
