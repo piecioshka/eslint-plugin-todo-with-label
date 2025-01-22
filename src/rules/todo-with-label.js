@@ -1,4 +1,4 @@
-const simpleGit = require("simple-git");
+const { execSync } = require("child_process");
 const debug = require("debug");
 
 const console = {
@@ -16,9 +16,33 @@ const types = [
   "XXX",
 ];
 
+function clearText(text) {
+  const textWithoutPrefix = /^[\s:-]*(.*)$/;
+  const matched = text.match(textWithoutPrefix);
+  return matched[1];
+}
+
+function extractAuthorEmail(blameOutput) {
+  const emailMatch = blameOutput.match(/author-mail <([^>]+)>/);
+  return emailMatch ? emailMatch[1] : "unknown";
+}
+
+function extractNameFromEmail(email) {
+  return email.split("@")[0];
+}
+
+function getGitEmail(line, filePath) {
+  const blameOutput = execSync(
+    `git blame -L ${line},${line} --porcelain ${filePath}`,
+    { encoding: "utf-8" }
+  );
+  return extractAuthorEmail(blameOutput);
+}
+
+/** @type {import('eslint').Rule.RuleModule} */
 module.exports = {
   meta: {
-    type: "suggestion",
+    type: "problem",
     docs: {
       description: "Supports TODO comments with a label in parentheses",
       recommended: true,
@@ -41,32 +65,30 @@ module.exports = {
   },
 
   create(context) {
-    const git = simpleGit();
     const { options } = context;
-    const sourceCode = context.getSourceCode();
-    const comments = sourceCode.getAllComments();
+    const sourceCode = context.sourceCode;
     const passedTypes = options[0]?.types;
     const passedPattern = options[0]?.pattern?.trim();
 
     const usedTypes = (passedTypes || types).join("|");
     const STARTS_WITH_TYPE_PATTERN = new RegExp(`^(${usedTypes})(.*)$`);
-    const defaultPattern = `^(${usedTypes})\$begin:math:text$(\\\\w+)\\$end:math:text$: (.*)$`;
+    const defaultPattern = `^(${usedTypes})\\((\\w+)\\)\\: (.*)$`;
 
     const [messageId, validPattern] = passedPattern
       ? ["invalid-pattern", new RegExp(passedPattern)]
       : ["without-label", new RegExp(defaultPattern)];
 
-    /**
-     * Extract the author's email from the Git blame output.
-     * @param {string} blameOutput The output from the `git blame` command.
-     * @returns {string} The email of the author or "unknown" if not found.
-     */
-    function extractAuthorEmail(blameOutput) {
-      const emailMatch = blameOutput.match(/author-mail <([^>]+)>/);
-      return emailMatch ? emailMatch[1] : "unknown";
+    function buildFixedComment(line, filePath, text) {
+      const email = getGitEmail(line, filePath);
+      const name = extractNameFromEmail(email);
+      const match = text.match(STARTS_WITH_TYPE_PATTERN);
+      const [_, type, rest] = match;
+      const clearRest = clearText(rest);
+      const fixedComment = `${type}(${name}): ${clearRest}`;
+      return fixedComment;
     }
 
-    comments.forEach((comment) => {
+    function processComment(comment) {
       const text = comment.value.trim();
 
       if (!STARTS_WITH_TYPE_PATTERN.test(text)) {
@@ -79,37 +101,25 @@ module.exports = {
           loc: comment.loc,
           messageId,
           data: { text, pattern: validPattern },
-          fix: async (fixer) => {
-            const filePath = context.getFilename();
+          fix(fixer) {
             const line = comment.loc.start.line;
-
-            try {
-              // Fetch Git blame info for the line
-              const blameOutput = await git.raw([
-                "blame",
-                "-L",
-                `${line},${line}`,
-                "--porcelain",
-                filePath,
-              ]);
-              const email = extractAuthorEmail(blameOutput);
-
-              // Format the fixed comment
-              const fixedComment = text.match(STARTS_WITH_TYPE_PATTERN)
-                ? `${RegExp.$1}(${email}): ${RegExp.$2.trim()}`
-                : `TODO(${email}): ${text}`;
-              return fixer.replaceText(comment, `// ${fixedComment}`);
-            } catch (error) {
-              console.log("Git blame error:", error.message);
-              return null;
-            }
+            const filePath = context.getFilename();
+            const fixedComment = buildFixedComment(line, filePath, text);
+            return fixer.replaceText(comment, `// ${fixedComment}`);
           },
         });
       } else {
         console.log("✅", text);
       }
-    });
+    }
 
-    return {};
+    return {
+      Program() {
+        const comments = sourceCode.getAllComments();
+        comments
+          .filter((token) => token.type === "Line")
+          .forEach(processComment);
+      },
+    };
   },
 };

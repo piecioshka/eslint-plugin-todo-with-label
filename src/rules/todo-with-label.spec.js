@@ -9,6 +9,8 @@ const invalidFactory = (options) => (code) => ({
   output: code,
   errors: 1,
 });
+
+// TODO(piecioshka): Define a type of this
 const globalOptions = { parserOptions: { ecmaVersion: 2015 } };
 
 test("case: without-label", () => {
