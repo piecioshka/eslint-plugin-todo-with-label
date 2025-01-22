@@ -30,7 +30,7 @@ This way, we will always have a point of contact for the person we can ask for h
 - ✅ Validate format of TODOs in comments _(default valid format is `TODO(label): any text here`)_
 - ✅ Supports passing a custom pattern and types
 - ✅ Supports 8 comment types: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
-- ✅ Autofix with `--fix` [#2]
+- ✅ Autofix with `--fix` [[#2](https://github.com/piecioshka/eslint-plugin-todo-with-label/pull/2)]
 
 ## Usage
 
@@ -57,18 +57,36 @@ module.exports = {
 
 The optional configuration for rule `todo-with-label/has-valid-pattern`:
 
-## `types`
+## Option: `types`
 
-Examples:
+Default value: `["TODO", "NOTE", "COMMENT", "FIXME", "BUG", "HACK", "INFO", "XXX"]`
+
+  - **valid**: `TODO(label): any text here`
+  - **valid**: `NOTE(label): any text here`
+  - **valid**: `COMMENT(label): any text here`
+  - etc.
+
+Example values:
 
 - `["TODO"]`
+  - **valid**: `TODO(label): any text here`
+  - **invalid**: `NOTE(label): any text here`
 - `["FOO", "BAR", "BAZ"]`
+  - **valid**: `FOO(label): any text here`
+  - **valid**: `BAR(label): any text here`
+  - **valid**: `BAZ(label): any text here`
+  - **invalid**: `TODO(label): any text here`
+  - **invalid**: `NOTE(label): any text here`
 
-Default `["TODO", "NOTE", "COMMENT", "FIXME", "BUG", "HACK", "INFO", "XXX"]`
+## Option: `pattern`
 
-## `pattern`
+Default value: `^TODO\\((\\w+)\\)\\: (.*)$`
 
-Examples:
+- **valid**: `TODO(label): any text here`
+- **invalid**: `TODO: any text here`
+- **invalid**: `TODO - any text here`
+
+Example values:
 
 - `^TODO: (.*)$`
   - **valid**: `TODO: any text here`
@@ -77,13 +95,9 @@ Examples:
 - `^TODO\\((author:@\\w+)\\)\\: (.*)$`
   - **valid**: `TODO(author:@login): any text here`
 
-Default `pattern` looks as follows: `^TODO\\((\\w+)\\)\\: (.*)$`
-
-- **valid**: `TODO(label): any text here`
-
 ⚠️ **WARNING**: When you pass a pattern, it should be a string and has _escaped_ backslashes.
 
-## Example usage with options
+## Examples
 
 ```js
 module.exports = {
