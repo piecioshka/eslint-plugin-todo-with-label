@@ -95,7 +95,7 @@ Example values:
 - `^TODO\\((author:@\\w+)\\)\\: (.*)$`
   - **valid**: `TODO(author:@login): any text here`
 
-⚠️ **WARNING**: When you pass a pattern, it should be a string and has _escaped_ backslashes.
+⚠️ **WARNING**: When you pass a pattern, it should be a string with _escaped_ backslashes.
 
 ## Examples
 
