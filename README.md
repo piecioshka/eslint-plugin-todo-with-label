@@ -30,6 +30,7 @@ This way, we will always have a point of contact for the person we can ask for h
 - ✅ Validate format of TODOs in comments _(default valid format is `TODO(label): any text here`)_
 - ✅ Supports passing a custom pattern and types
 - ✅ Supports 8 comment types: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
+- ✅ Autofix with `--fix` [[#2](https://github.com/piecioshka/eslint-plugin-todo-with-label/pull/2)]
 
 ## Usage
 
@@ -39,16 +40,16 @@ Installation:
 npm install -D eslint eslint-plugin-todo-with-label
 ```
 
-Add `todo-with-label` to the plugins section of your `.eslintrc` configuration file.<br/>
-You can omit the `eslint-plugin-` prefix:
+Add `todo-with-label` to the plugins section of your `.eslintrc.js` configuration file:
 
 ```javascript
 module.exports = {
   // ...
-  plugins: ['todo-with-label'],
+  plugins: ["todo-with-label"],
   rules: {
-    'todo-with-label/has-valid-pattern': 'error',
-  }
+    "todo-with-label/has-valid-pattern": "error",
+  },
+  // ...
 };
 ```
 
@@ -56,37 +57,58 @@ module.exports = {
 
 The optional configuration for rule `todo-with-label/has-valid-pattern`:
 
-- `types` examples:
-  - `["TODO"]`
-  - `["FOO", "BAR", "BAZ"]`
+## Option: `types`
 
-  Default `["TODO", "NOTE", "COMMENT", "FIXME", "BUG", "HACK", "INFO", "XXX"]`
+Default value: `["TODO", "NOTE", "COMMENT", "FIXME", "BUG", "HACK", "INFO", "XXX"]`
 
-- `pattern` examples:
-  - `^TODO: (.*)$`
-    - **valid**: `TODO: any text here`
-  - `^TODO\\((\\w+)\\)$`
-    - **valid**: `TODO(label)`
-  - `^TODO\\((author:@\\w+)\\)\\: (.*)$`
-    - **valid**: `TODO(author:@login): any text here`
+  - **valid**: `TODO(label): any text here`
+  - **valid**: `NOTE(label): any text here`
+  - **valid**: `COMMENT(label): any text here`
+  - etc.
 
-  Default `pattern` looks as follows: `^TODO\\((\\w+)\\)\\: (.*)$`
-    - **valid**: `TODO(label): any text here`
+Example values:
 
-  ⚠️ **WARNING**: When you pass a pattern, it should be a string and has _escaped_ backslashes.
+- `["TODO"]`
+  - **valid**: `TODO(label): any text here`
+  - **invalid**: `NOTE(label): any text here`
+- `["FOO", "BAR", "BAZ"]`
+  - **valid**: `FOO(label): any text here`
+  - **valid**: `BAR(label): any text here`
+  - **valid**: `BAZ(label): any text here`
+  - **invalid**: `TODO(label): any text here`
+  - **invalid**: `NOTE(label): any text here`
 
-Example usage with options:
+## Option: `pattern`
+
+Default value: `^TODO\\((\\w+)\\)\\: (.*)$`
+
+- **valid**: `TODO(label): any text here`
+- **invalid**: `TODO: any text here`
+- **invalid**: `TODO - any text here`
+
+Example values:
+
+- `^TODO: (.*)$`
+  - **valid**: `TODO: any text here`
+- `^TODO\\((\\w+)\\)$`
+  - **valid**: `TODO(label)`
+- `^TODO\\((author:@\\w+)\\)\\: (.*)$`
+  - **valid**: `TODO(author:@login): any text here`
+
+⚠️ **WARNING**: When you pass a pattern, it should be a string with _escaped_ backslashes.
+
+## Examples
 
 ```js
 module.exports = {
   // ...
-  plugins: ['todo-with-label'],
+  plugins: ["todo-with-label"],
   rules: {
     "todo-with-label/has-valid-pattern": [
       "error",
       {
         types: ["TODO"],
-        pattern: "^TODO\\((author:@\\w+)\\)\\: (.*)$"
+        pattern: "^TODO\\((author:@\\w+)\\)\\: (.*)$",
       },
     ],
   },
@@ -95,8 +117,8 @@ module.exports = {
 
 ## Related
 
-* [eslint-config-piecioshka](https://github.com/piecioshka/eslint-config-piecioshka)
-* [export-eslint-config](https://github.com/piecioshka/export-eslint-config)
+- [eslint-config-piecioshka](https://github.com/piecioshka/eslint-config-piecioshka)
+- [export-eslint-config](https://github.com/piecioshka/export-eslint-config)
 
 ## License
 
