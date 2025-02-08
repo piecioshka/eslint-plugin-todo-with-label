@@ -97,6 +97,8 @@ Example values:
 
 ⚠️ **WARNING**: When you pass a pattern, it should be a string with _escaped_ backslashes.
 
+⚠️ **WARNING 2**: When you pass a pattern, you cannot use `--fix` option.
+
 ## Examples
 
 ```js
