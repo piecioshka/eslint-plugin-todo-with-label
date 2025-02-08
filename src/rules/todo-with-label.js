@@ -1,3 +1,4 @@
+const fs = require("fs");
 const { execSync } = require("child_process");
 const debug = require("debug");
 
@@ -5,7 +6,9 @@ const console = {
   log: debug("eslint:plugins:todo-with-label:log"),
 };
 
-const types = [
+const DEFAULT_AUTHOR_EMAIL = "unknown@unknown.com";
+
+const DEFAULT_TYPES = [
   "TODO",
   "NOTE",
   "COMMENT",
@@ -24,7 +27,7 @@ function clearText(text) {
 
 function extractAuthorEmail(blameOutput) {
   const emailMatch = blameOutput.match(/author-mail <([^>]+)>/);
-  return emailMatch ? emailMatch[1] : "unknown";
+  return emailMatch ? emailMatch[1] : DEFAULT_AUTHOR_EMAIL;
 }
 
 function extractNameFromEmail(email) {
@@ -34,13 +37,14 @@ function extractNameFromEmail(email) {
 
 function getGitEmail(line, filePath) {
   try {
-    const blameOutput = execSync(
-      `git blame -L ${line},${line} --porcelain ${filePath}`,
-      { encoding: "utf-8" }
-    );
+    if (!fs.existsSync(filePath)) {
+      return DEFAULT_AUTHOR_EMAIL;
+    }
+    const command = `git blame -L ${line},${line} --porcelain ${filePath}`;
+    const blameOutput = execSync(command, { encoding: "utf-8" });
     return extractAuthorEmail(blameOutput);
   } catch (error) {
-    return "unknown@unknown.com";
+    return DEFAULT_AUTHOR_EMAIL;
   }
 }
 
@@ -75,9 +79,9 @@ module.exports = {
     const passedTypes = options[0]?.types;
     const passedPattern = options[0]?.pattern?.trim();
 
-    const usedTypes = (passedTypes || types).join("|");
+    const usedTypes = (passedTypes || DEFAULT_TYPES).join("|");
     const STARTS_WITH_TYPE_PATTERN = new RegExp(`^(${usedTypes})(.*)$`);
-    const defaultPattern = `^(${usedTypes})\\((\\w+)\\)\\: (.*)$`;
+    const defaultPattern = `^(${usedTypes})\\((\\w+)\\)\\s*\\:\\s+(.*)$`;
 
     const [messageId, validPattern] = passedPattern
       ? ["invalid-pattern", new RegExp(passedPattern)]
@@ -105,10 +109,15 @@ module.exports = {
         context.report({
           loc: comment.loc,
           messageId,
-          data: { text, pattern: validPattern },
+          data: { text, pattern: String(validPattern) },
           fix(fixer) {
+            if (passedPattern) {
+              throw new Error(
+                '--fix is not supported with used "pattern" option'
+              );
+            }
             const line = comment.loc.start.line;
-            const filePath = context.getFilename();
+            const filePath = context.filename;
             const fixedComment = buildFixedComment(line, filePath, text);
             return fixer.replaceText(comment, `// ${fixedComment}`);
           },
