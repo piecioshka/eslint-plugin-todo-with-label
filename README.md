@@ -29,7 +29,7 @@ This way, we will always have a point of contact for the person we can ask for h
 
 - ✅ Validate format of TODOs in comments _(default valid format is `TODO(label): any text here`)_
 - ✅ Supports passing a custom pattern and types
-- ✅ Supports 8 comment types: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
+- ✅ Supports 8 comment types _(by default)_: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
 - ✅ Autofix with `--fix` [[#2](https://github.com/piecioshka/eslint-plugin-todo-with-label/pull/2)]
 
 ## Usage

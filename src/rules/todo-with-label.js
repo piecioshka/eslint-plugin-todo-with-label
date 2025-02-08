@@ -51,7 +51,8 @@ function getGitEmail(line, filePath) {
 /** @type {import('eslint').Rule.RuleModule} */
 module.exports = {
   meta: {
-    type: "problem",
+    type: "layout",
+    fixable: "code",
     docs: {
       description: "Supports TODO comments with a label in parentheses",
       recommended: true,
@@ -60,7 +61,6 @@ module.exports = {
       "without-label": "'{{ text }}' should have a label",
       "invalid-pattern": "'{{ text }}' doesn't match the pattern {{ pattern }}",
     },
-    fixable: "code",
     schema: [
       {
         type: "object",
