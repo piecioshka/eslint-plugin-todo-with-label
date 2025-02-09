@@ -75,7 +75,7 @@ module.exports = {
 
   create(context) {
     const { options } = context;
-    const sourceCode = context.sourceCode;
+    const sourceCode = context.sourceCode ?? context.getSourceCode();
     const passedTypes = options[0]?.types;
     const passedPattern = options[0]?.pattern?.trim();
 
