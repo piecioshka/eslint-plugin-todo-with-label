@@ -124,4 +124,4 @@ module.exports = {
 
 ## License
 
-[The MIT License](https://piecioshka.mit-license.org) @ 2023
+[The MIT License](http://piecioshka.mit-license.org) @ 2026
