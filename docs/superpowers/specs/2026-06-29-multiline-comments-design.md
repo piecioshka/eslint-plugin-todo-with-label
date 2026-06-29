@@ -13,7 +13,7 @@ never validated.
 // validated today
 // TODO: foo
 
-/* TODO: foo */          // ignored
+/* TODO: foo */ // ignored
 /*
  * TODO: foo             // ignored
  */
