@@ -30,6 +30,7 @@ This way, we will always have a point of contact for the person we can ask for h
 - ✅ Validate format of TODOs in comments _(default valid format is `TODO(label): any text here`)_
 - ✅ Supports passing a custom pattern and types
 - ✅ Supports 8 comment types _(by default)_: `TODO`, `NOTE`, `COMMENT`, `FIXME`, `BUG`, `HACK`, `INFO`, `XXX`
+- ✅ Supports line (`//`), block (`/* */`), and multiline (JSDoc-style) comments [[#7](https://github.com/piecioshka/eslint-plugin-todo-with-label/pull/7)]
 - ✅ Autofix with `--fix` [[#2](https://github.com/piecioshka/eslint-plugin-todo-with-label/pull/2)]
 
 ## Usage
@@ -61,10 +62,10 @@ The optional configuration for rule `todo-with-label/has-valid-pattern`:
 
 Default value: `["TODO", "NOTE", "COMMENT", "FIXME", "BUG", "HACK", "INFO", "XXX"]`
 
-  - **valid**: `TODO(label): any text here`
-  - **valid**: `NOTE(label): any text here`
-  - **valid**: `COMMENT(label): any text here`
-  - etc.
+- **valid**: `TODO(label): any text here`
+- **valid**: `NOTE(label): any text here`
+- **valid**: `COMMENT(label): any text here`
+- etc.
 
 Example values:
 
@@ -116,6 +117,24 @@ module.exports = {
   },
 };
 ```
+
+## Supported comment styles
+
+The rule validates TODOs in line, block, and multiline comments:
+
+```js
+// TODO(label): line comment
+
+/* TODO(label): block comment */
+
+/*
+ * TODO(label): multiline comment
+ * FIXME(label): each line is validated independently
+ */
+```
+
+Autofix (`--fix`) preserves the comment style, including the leading
+asterisks and indentation of multiline blocks.
 
 ## Related
 

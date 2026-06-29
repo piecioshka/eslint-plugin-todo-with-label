@@ -25,6 +25,16 @@ function clearText(text) {
   return matched ? matched[1] : text;
 }
 
+// Strips leading whitespace and an optional JSDoc-style asterisk from a
+// single line of a block comment. Returns the cleaned content along with
+// the length of the removed prefix (needed to compute fix ranges).
+function stripBlockLinePrefix(rawLine) {
+  const match = rawLine.match(/^(\s*\*?\s?)(.*)$/);
+  const prefix = match ? match[1] : "";
+  const content = match ? match[2] : rawLine;
+  return { prefix, content };
+}
+
 function extractAuthorEmail(blameOutput) {
   const emailMatch = blameOutput.match(/author-mail <([^>]+)>/);
   return emailMatch ? emailMatch[1] : DEFAULT_AUTHOR_EMAIL;
@@ -97,9 +107,10 @@ module.exports = {
       return fixedComment;
     }
 
-    function processComment(comment) {
-      const text = comment.value.trim();
-
+    // Validates a single TODO-like text and reports it when invalid.
+    // `loc` is the location to report on; `buildFix` receives the fixer and
+    // the rebuilt comment text and returns the actual fix.
+    function validate(text, line, loc, buildFix) {
       if (!STARTS_WITH_TYPE_PATTERN.test(text)) {
         return;
       }
@@ -107,19 +118,18 @@ module.exports = {
       if (!validPattern.test(text)) {
         console.log("❌", text);
         context.report({
-          loc: comment.loc,
+          loc,
           messageId,
           data: { text, pattern: String(validPattern) },
           fix(fixer) {
             if (passedPattern) {
               throw new Error(
-                '--fix is not supported with used "pattern" option'
+                '--fix is not supported with used "pattern" option',
               );
             }
-            const line = comment.loc.start.line;
             const filePath = context.filename;
             const fixedComment = buildFixedComment(line, filePath, text);
-            return fixer.replaceText(comment, `// ${fixedComment}`);
+            return buildFix(fixer, fixedComment);
           },
         });
       } else {
@@ -127,12 +137,67 @@ module.exports = {
       }
     }
 
+    function processLineComment(comment) {
+      const text = comment.value.trim();
+      const line = comment.loc.start.line;
+      validate(text, line, comment.loc, (fixer, fixedComment) =>
+        fixer.replaceText(comment, `// ${fixedComment}`),
+      );
+    }
+
+    function processSingleLineBlockComment(comment) {
+      const text = comment.value.trim();
+      const line = comment.loc.start.line;
+      validate(text, line, comment.loc, (fixer, fixedComment) =>
+        fixer.replaceText(comment, `/* ${fixedComment} */`),
+      );
+    }
+
+    function processMultiLineBlockComment(comment) {
+      // `comment.value` is the block's inner text (without `/*` and `*/`).
+      // Each line is validated independently after its prefix (indentation
+      // and an optional `*`) is stripped, so JSDoc-style blocks work.
+      const lines = comment.value.split("\n");
+      // Offset of the first inner character within the full source:
+      // skip `/*` (2 chars) past the comment's start.
+      let offset = comment.range[0] + 2;
+
+      lines.forEach((rawLine, index) => {
+        const { prefix, content } = stripBlockLinePrefix(rawLine);
+        const text = content.trim();
+        const line = comment.loc.start.line + index;
+        const contentStart = offset + prefix.length;
+        const loc = {
+          start: { line, column: prefix.length },
+          end: { line, column: rawLine.length },
+        };
+
+        validate(text, line, loc, (fixer, fixedComment) =>
+          fixer.replaceTextRange(
+            [contentStart, contentStart + content.length],
+            fixedComment,
+          ),
+        );
+
+        // Advance past this line and the `\n` that separated it.
+        offset += rawLine.length + 1;
+      });
+    }
+
+    function processComment(comment) {
+      if (comment.type === "Line") {
+        processLineComment(comment);
+      } else if (comment.loc.start.line === comment.loc.end.line) {
+        processSingleLineBlockComment(comment);
+      } else {
+        processMultiLineBlockComment(comment);
+      }
+    }
+
     return {
       Program() {
         const comments = sourceCode.getAllComments();
-        comments
-          .filter((token) => token.type === "Line")
-          .forEach(processComment);
+        comments.forEach(processComment);
       },
     };
   },
